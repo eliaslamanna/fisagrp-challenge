@@ -1,6 +1,6 @@
 package unit;
 
-import app.configuration.ConfiguradorSpring;
+import app.configuration.SpringConfigurator;
 import app.dto.NotesDTO;
 import app.service.impl.MerchantService;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.LinkedList;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { ConfiguradorSpring.class })
+@ContextConfiguration(classes = { SpringConfigurator.class })
 public class MerchantTest {
 
     @Autowired

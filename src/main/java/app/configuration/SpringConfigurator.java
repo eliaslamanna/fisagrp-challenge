@@ -5,5 +5,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("app")
-public class ConfiguradorSpring {
+public class SpringConfigurator {
 }
