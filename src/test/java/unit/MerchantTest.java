@@ -20,7 +20,7 @@ public class MerchantTest {
     MerchantService merchantService;
 
     @Test
-    public void dataIsAnalisedCorrectly() {
+    public void dataIsAnalisedCorrectlyTest() {
         //Arrange
         LinkedList<String> entries = new LinkedList<>();
         entries.add("glob is I");
@@ -53,7 +53,7 @@ public class MerchantTest {
     }
 
     @Test
-    public void differentCurrencyAnalisedCorrectly() {
+    public void differentCurrencyAnalisedCorrectlyTest() {
         //Arrange
         LinkedList<String> entries = new LinkedList<>();
         entries.add("pum is I");
@@ -75,6 +75,76 @@ public class MerchantTest {
         expectedAnswers.add("pum pam Silver is 68 Credits");
         expectedAnswers.add("pum pam Gold is 57800 Credits");
         expectedAnswers.add("pum pam Iron is 782 Credits");
+
+        NotesDTO expected = new NotesDTO(expectedAnswers);
+
+        //Act
+        NotesDTO result = merchantService.enterNotes(body);
+
+        //Assert
+        Assertions.assertEquals(expected,result);
+    }
+
+    @Test
+    public void invalidHowMuchQuestionTest() {
+        //Arrange
+        LinkedList<String> entries = new LinkedList<>();
+        entries.add("glob is I");
+        entries.add("prok is V");
+        entries.add("pish is X");
+        entries.add("tegj is L");
+        entries.add("glob glob Silver is 34 Credits");
+        entries.add("glob prok Gold is 57800 Credits");
+        entries.add("pish pish Iron is 3910 Credits");
+        entries.add("how much is pish tegj glob glob ?");
+        entries.add("how many Credits is glob prok Silver ?");
+        entries.add("how many Credits is glob prok Gold ?");
+        entries.add("how many Credits is glob prok Iron ?");
+        entries.add("how much wood could a woodchuck chuck if a woodchuck could chuck wood ?");
+
+        NotesDTO body = new NotesDTO(entries);
+
+        LinkedList<String> expectedAnswers = new LinkedList<>();
+        expectedAnswers.add("pish tegj glob glob is 42");
+        expectedAnswers.add("glob prok Silver is 68 Credits");
+        expectedAnswers.add("glob prok Gold is 57800 Credits");
+        expectedAnswers.add("glob prok Iron is 782 Credits");
+        expectedAnswers.add("I have no idea what you are talking about");
+
+        NotesDTO expected = new NotesDTO(expectedAnswers);
+
+        //Act
+        NotesDTO result = merchantService.enterNotes(body);
+
+        //Assert
+        Assertions.assertEquals(expected,result);
+    }
+
+    @Test
+    public void invalidHowManyQuestionTest() {
+        //Arrange
+        LinkedList<String> entries = new LinkedList<>();
+        entries.add("glob is I");
+        entries.add("prok is V");
+        entries.add("pish is X");
+        entries.add("tegj is L");
+        entries.add("glob glob Silver is 34 Credits");
+        entries.add("glob prok Gold is 57800 Credits");
+        entries.add("pish pish Iron is 3910 Credits");
+        entries.add("how much is pish tegj glob glob ?");
+        entries.add("how many Credits is glob prok Silver ?");
+        entries.add("how many Credits is glob prok Gold ?");
+        entries.add("how many Credits is glob prok Iron ?");
+        entries.add("how many Credits is pum pam Iron ?");
+
+        NotesDTO body = new NotesDTO(entries);
+
+        LinkedList<String> expectedAnswers = new LinkedList<>();
+        expectedAnswers.add("pish tegj glob glob is 42");
+        expectedAnswers.add("glob prok Silver is 68 Credits");
+        expectedAnswers.add("glob prok Gold is 57800 Credits");
+        expectedAnswers.add("glob prok Iron is 782 Credits");
+        expectedAnswers.add("I have no idea what you are talking about");
 
         NotesDTO expected = new NotesDTO(expectedAnswers);
 

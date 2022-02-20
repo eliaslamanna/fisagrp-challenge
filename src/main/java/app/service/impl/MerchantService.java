@@ -3,6 +3,7 @@ package app.service.impl;
 import app.converter.RomanConverter;
 import app.dto.NotesDTO;
 import app.enums.MaterialEnum;
+import app.exception.types.InvalidQuestionException;
 import app.service.IMerchantService;
 import com.amazonaws.services.dynamodbv2.xspec.S;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.spi.AbstractResourceBundleProvider;
 import java.util.stream.Stream;
 
 @Service
@@ -45,7 +47,6 @@ public class MerchantService implements IMerchantService {
                                 Double valueMaterial = Double.valueOf(words[words.length - MATERIAL_VALUE_INDEX]) / RomanConverter.convertoToNumber(roman[0]);
                                 data.put(word, String.valueOf(valueMaterial));
                             }
-
                         });
                     } else {
                         questions.add(note);
@@ -69,8 +70,15 @@ public class MerchantService implements IMerchantService {
                             if(data.containsKey(words[i])) {
                                 roman[0] += data.get(words[i]);
                                 answer[0] += words[i] + " ";
-                            } else if(words[i].equals("?")){
+                            } else if(words[i].equals("?") && !answer[0].equals("I have no idea what you are talking about")){
                                 answer[0] += "is " + (RomanConverter.convertoToNumber(roman[0]));
+                            }
+                            else if(!answer[0].equals("I have no idea what you are talking about")){
+                                try {
+                                    throw new InvalidQuestionException();
+                                } catch (InvalidQuestionException e) {
+                                    answer[0] += "I have no idea what you are talking about";
+                                }
                             }
                         });
             } else {
@@ -80,9 +88,16 @@ public class MerchantService implements IMerchantService {
                             if(!MaterialEnum.materialExists(words[i]) && data.containsKey(words[i])) {
                                 roman[0] += data.get(words[i]);
                                 answer[0] += words[i] + " ";
-                            } else if(MaterialEnum.materialExists(words[i])){
+                            } else if(MaterialEnum.materialExists(words[i]) && !answer[0].equals("I have no idea what you are talking about")){
                                 Integer credits = (int) (RomanConverter.convertoToNumber(roman[0]) * Double.valueOf(data.get(words[i])));
                                 answer[0] += words[i] + " is " + credits + " Credits";
+                            }
+                            else if(!words[i].equals("?") && !answer[0].equals("I have no idea what you are talking about")){
+                                try {
+                                    throw new InvalidQuestionException();
+                                } catch (InvalidQuestionException e) {
+                                    answer[0] += "I have no idea what you are talking about";
+                                }
                             }
                         });
             }
