@@ -2,6 +2,7 @@ package app.converter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class RomanConverter {
 
@@ -18,19 +19,20 @@ public class RomanConverter {
     }
 
     public static int convertoToNumber(String roman) {
-        int result=0;
+        int[] result = {0};
 
-        for(int i = 0; i < roman.length() ;i++) {
-            char ch = roman.charAt(i);
+        Stream.iterate(0, n -> n + 1)
+                .limit(roman.length())
+                .forEach(i -> {
+                    char ch = roman.charAt(i);
+                    if(i > 0 && romanDictionaty.get(ch) > romanDictionaty.get(roman.charAt(i-1))) {
+                        result[0] += romanDictionaty.get(ch) - 2*romanDictionaty.get(roman.charAt(i-1));
+                    } else {
+                        result[0] += romanDictionaty.get(ch);
+                    }
+                });
 
-            if(i > 0 && romanDictionaty.get(ch) > romanDictionaty.get(roman.charAt(i-1))) {
-                result += romanDictionaty.get(ch) - 2*romanDictionaty.get(roman.charAt(i-1));
-            } else {
-                result += romanDictionaty.get(ch);
-            }
-        }
-
-        return result;
+        return result[0];
     }
 
 }
